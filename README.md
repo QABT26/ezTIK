@@ -1,5 +1,7 @@
 # ezTIK
 
+**Status: Android v0.1 baseline merged into `main` (27/11/2026).** ezTIK is the sole repository for TikTok-related app/feed development; ezTube `main` contains no TikTok module. Former TikTok PRs #22–#25 in ezTube have been closed without merging.
+
 **Independent Android project** for viewing public TikTok guest-feed clips through a standalone Kotlin/Jetpack Compose + Media3 app.
 
 Repository: https://github.com/QABT26/ezTIK  
@@ -35,13 +37,13 @@ The repository includes its **own Gradle 8.9 wrapper** (`gradlew.bat`, `gradlew`
 To configure an HTTPS gateway at build time:
 
 ```powershell
-gradle -p . -PtiktokFeedBaseUrl=https://YOUR-REAL-FEED-DOMAIN testDebugUnitTest assembleDebug
+.\gradlew.bat -PtiktokFeedBaseUrl=https://YOUR-REAL-FEED-DOMAIN testDebugUnitTest assembleDebug
 ```
 
 Configured endpoint: `https://YOUR-REAL-FEED-DOMAIN/v1/guest-feed`. Release builds without a configured HTTPS feed fail closed; **do not use example hostnames as if they were deployed**.
 
 ## QA status
 
-The **source** V2.2 was observed playing multiple videos on Samsung in ezTube. **The newly separated ezTIK app is not yet build/device-verified.** Do not merge or publish it until Gradle tests and user-0 Samsung QA pass.
+**ezTIK v0.1 is verified on Samsung in the local-backend lab:** Node gateway tests 4/4 PASS, Android `testDebugUnitTest assembleDebug` PASS, `com.qabt.eztik/.MainActivity` installed into Android user 0, live guest feed returned 16 items, `lab_media3_ready` and preloaded page transitions 0–4 were observed without playback errors in the supplied log. Audio, manual refresh and long-screen-timeout remain outside the supplied log evidence. **No public release or claim of standalone TikTok connectivity until HTTPS/no-ADB tests pass.**
 
 Source provenance and test gates: `docs/PROJECT_MIGRATION.md`.
