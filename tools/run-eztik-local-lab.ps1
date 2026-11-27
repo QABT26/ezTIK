@@ -68,12 +68,11 @@ try {
     } else {throw 'No ezTIK Gradle wrapper or Gradle 8.9 installed'}
     $Apk=Join-Path $Root 'app\build\outputs\apk\debug\app-debug.apk'
     if(-not (Test-Path $Apk)){throw 'ezTIK debug APK missing'}
-    if(-not $LabDir){
-        $LabDir=Get-ChildItem ([IO.Path]::GetTempPath()) -Directory -Filter 'eztube-tiktok-native-*' |
-            Where-Object {Test-Path (Join-Path $_.FullName 'upstream\dist\main.js')} |
-            Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
-    }
-    if(-not $LabDir){throw 'Pinned feed backend cache not found. This standalone debug lab cannot fetch a feed without it.'}
+    # ezTIK owns its own guest-backend lab; no cached files from ezTube.
+    if (-not $LabDir) { $LabDir=Join-Path $Root '.lab\guest-backend' }
+    $Prepare=Join-Path $Root 'tools\prepare-eztik-guest-backend.ps1'
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $Prepare -LabDir $LabDir
+    if ($LASTEXITCODE -ne 0) { throw 'ezTIK guest backend preparation failed' }
     $Source=Join-Path $LabDir 'upstream'
     $Python=Join-Path $LabDir '.venv\Scripts\python.exe'
     if(-not (Test-Path $Python)){throw 'Pinned backend Python environment missing'}

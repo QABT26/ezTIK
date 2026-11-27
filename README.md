@@ -24,13 +24,13 @@ There is **no guarantee of an ad-free feed**, personalized For You, ongoing API 
 
 ## Local setup
 
-1. Clone this repository into `E:\RESEACHs\ezTIK` next to the existing `ezTube` checkout.
+1. Clone this repository into `E:\RESEACHs\ezTIK` (no ezTube checkout required).
 2. Keep Node.js, Android SDK, Java 17/21 and Samsung device ADB available.
-3. For reproducibility, use the pinned TikTok guest-feed lab already validated in ezTube (commit `d438d72fa903aa0ecb6f104fa9b915928134fe0a`, cached under Windows Temp).
+3. The first QA run automatically clones, builds and caches the pinned guest-feed dependency under **`ezTIK/.lab/guest-backend`** (upstream revision `d438d72fa903aa0ecb6f104fa9b915928134fe0a`). It requires internet, Node 22+, Python and pnpm via npx. Subsequent runs reuse this ezTIK-owned cache.
 4. Run `powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\run-eztik-local-lab.ps1`.
 5. Keep PowerShell open during video playback; pressing Enter ends backend/reverse.
 
-The repository includes its **own Gradle 8.9 wrapper** (`gradlew.bat`, `gradlew`, `gradle/wrapper/`). The Android app and its build are independent of the ezTube checkout. The only reuse in the local debug lab is the existing *cached* pinned TikTok guest-feed backend, which is not included in the APK. CI uses the same pinned Gradle version.
+The repository includes its **own Gradle 8.9 wrapper** (`gradlew.bat`, `gradlew`, `gradle/wrapper/`) and **self-managed pinned guest-feed lab** (`tools/prepare-eztik-guest-backend.ps1`). No source code, Gradle files, or cached backend are loaded from ezTube. External TikTok upstream dependencies are downloaded directly from their upstream repository, never included in the APK. CI uses the same pinned Gradle version.
 
 ## HTTPS option (future; not active)
 
@@ -47,3 +47,7 @@ Configured endpoint: `https://YOUR-REAL-FEED-DOMAIN/v1/guest-feed`. Release buil
 **ezTIK v0.1 is verified on Samsung in the local-backend lab:** Node gateway tests 4/4 PASS, Android `testDebugUnitTest assembleDebug` PASS, `com.qabt.eztik/.MainActivity` installed into Android user 0, live guest feed returned 16 items, `lab_media3_ready` and preloaded page transitions 0–4 were observed without playback errors in the supplied log. Audio, manual refresh and long-screen-timeout remain outside the supplied log evidence. **No public release or claim of standalone TikTok connectivity until HTTPS/no-ADB tests pass.**
 
 Source provenance and test gates: `docs/PROJECT_MIGRATION.md`.
+
+## Canonical ownership
+
+All TikTok app/frontend/feed/backend work now belongs to `QABT26/ezTIK`. `QABT26/ezTube/main` has no TikTok code; historical TikTok PRs #22–#25 were closed without merge. Prior experiments remain historical provenance, not runtime dependencies.

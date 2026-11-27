@@ -10,3 +10,6 @@ __pycache__/
 *.jks
 .env
 *.log
+
+# Isolated local TikTok guest-feed backend (not versioned)
+.lab/
