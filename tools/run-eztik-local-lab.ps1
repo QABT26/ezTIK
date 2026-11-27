@@ -19,6 +19,9 @@ try {
     if(-not (Test-Path $Adb)){throw 'Android platform-tools adb missing'}
     if((git rev-parse --is-inside-work-tree).Trim() -ne 'true'){throw 'Not a Git worktree'}
     if(git status --porcelain){throw 'WORKTREE NOT CLEAN; preserve changes before QA'}
+    if(-not (Get-Command node -ErrorAction SilentlyContinue)){throw 'Node.js not found'}
+    Write-Host '===== GATEWAY UNIT TESTS =====' -ForegroundColor Cyan
+    Checked 'node' @('--test',(Join-Path $Root 'backend\tiktok\feed-gateway.test.js'))
     $Wrapper=Join-Path $Root 'gradlew.bat'
     if(Test-Path $Wrapper){
         Write-Host '===== BUILD ezTIK WITH OWN PINNED GRADLE WRAPPER =====' -ForegroundColor Cyan
