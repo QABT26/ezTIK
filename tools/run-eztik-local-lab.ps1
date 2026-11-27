@@ -7,7 +7,7 @@ $Port=39117
 $ExpectedBackend='d438d72fa903aa0ecb6f104fa9b915928134fe0a'
 $Server=$null
 $ReverseAdded=$false
-$keys=@('HOST','PORT','TIKTOK_PYTHON','TIKTOK_TRANSPORT','TIKTOK_MIN_REQUEST_INTERVAL_MS')
+$keys=@('HOST','PORT','TIKTOK_PYTHON','TIKTOK_TRANSPORT','TIKTOK_MIN_REQUEST_INTERVAL_MS','ANDROID_HOME','ANDROID_SDK_ROOT')
 $old=@{}
 foreach($key in $keys){$old[$key]=[Environment]::GetEnvironmentVariable($key,'Process')}
 function Checked([string]$Program, [string[]]$Arguments){
@@ -19,6 +19,43 @@ try {
     if(-not (Test-Path $Adb)){throw 'Android platform-tools adb missing'}
     if((git rev-parse --is-inside-work-tree).Trim() -ne 'true'){throw 'Not a Git worktree'}
     if(git status --porcelain){throw 'WORKTREE NOT CLEAN; preserve changes before QA'}
+
+    # Windows Android Studio keeps the SDK under LOCALAPPDATA. A fresh Git clone
+    # deliberately has no local.properties, so Gradle needs SDK discovery.
+    Write-Host '===== ANDROID SDK AUTO-DISCOVERY =====' -ForegroundColor Cyan
+    $SdkCandidates = @(
+        $env:ANDROID_HOME,
+        $env:ANDROID_SDK_ROOT,
+        (Join-Path $env:LOCALAPPDATA 'Android\Sdk')
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+    $SdkHome = $null
+    foreach ($Candidate in $SdkCandidates) {
+        if ((Test-Path (Join-Path $Candidate 'platform-tools\adb.exe')) -and
+            (Test-Path (Join-Path $Candidate 'platforms\android-35\android.jar'))) {
+            $SdkHome = (Resolve-Path $Candidate).Path
+            break
+        }
+    }
+    if (-not $SdkHome) {
+        throw 'Android SDK 35 not found. Verify Android Studio SDK Manager and LOCALAPPDATA\Android\Sdk.'
+    }
+    $env:ANDROID_HOME = $SdkHome
+    $env:ANDROID_SDK_ROOT = $SdkHome
+    $Adb = Join-Path $SdkHome 'platform-tools\adb.exe'
+    $LocalProperties = Join-Path $Root 'local.properties'
+    if (-not (Test-Path $LocalProperties)) {
+        $SdkGradlePath = $SdkHome.Replace('\','/')
+        Set-Content -Path $LocalProperties -Value "sdk.dir=$SdkGradlePath" -Encoding Ascii
+        Write-Host 'Created ignored local.properties for this Windows checkout.'
+    } else {
+        # Never silently overwrite developer-specific SDK settings.
+        $ExistingSdkLine = Get-Content $LocalProperties | Where-Object { $_ -match '^\s*sdk\.dir\s*=' } | Select-Object -First 1
+        if (-not $ExistingSdkLine) {
+            throw 'Existing local.properties has no sdk.dir; review it before continuing.'
+        }
+    }
+    Write-Host "PASS: SDK=$SdkHome" -ForegroundColor Green
+
     if(-not (Get-Command node -ErrorAction SilentlyContinue)){throw 'Node.js not found'}
     Write-Host '===== GATEWAY UNIT TESTS =====' -ForegroundColor Cyan
     Checked 'node' @('--test',(Join-Path $Root 'backend\tiktok\feed-gateway.test.js'))
