@@ -11,7 +11,7 @@ Only TikTok-specific pieces are migrated. All old TikTok WebView feed-signing/ob
 - Repository: `QABT26/ezTIK`; local Windows checkout: `E:\RESEACHs\ezTIK`
 - Android application ID: `com.qabt.eztik`; can coexist with `com.qabt.eztube`.
 - Android UI directly opens TikTok playback, not ezTube's five-tab navigation.
-- No dependence on ezTube application source code, databases, login state or WebView experiments.
+- No dependence on ezTube application source, Gradle wrapper, databases, login state or WebView experiments. ezTIK owns its Gradle 8.9 wrapper.
 
 ## Constraints
 

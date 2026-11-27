@@ -19,14 +19,13 @@ try {
     if(-not (Test-Path $Adb)){throw 'Android platform-tools adb missing'}
     if((git rev-parse --is-inside-work-tree).Trim() -ne 'true'){throw 'Not a Git worktree'}
     if(git status --porcelain){throw 'WORKTREE NOT CLEAN; preserve changes before QA'}
-    $Wrapper=Join-Path (Split-Path $Root -Parent) 'ezTube\gradlew.bat'
+    $Wrapper=Join-Path $Root 'gradlew.bat'
     if(Test-Path $Wrapper){
-        Write-Host '===== BUILD WITH EXISTING ezTube GRADLE DISTRIBUTION =====' -ForegroundColor Cyan
-        Checked $Wrapper @('-p',$Root,'testDebugUnitTest','assembleDebug')
+        Write-Host '===== BUILD ezTIK WITH OWN PINNED GRADLE WRAPPER =====' -ForegroundColor Cyan
+        Checked $Wrapper @('testDebugUnitTest','assembleDebug')
     } elseif(Get-Command gradle -ErrorAction SilentlyContinue){
-        Write-Host '===== BUILD WITH SYSTEM GRADLE =====' -ForegroundColor Cyan
         Checked 'gradle' @('-p',$Root,'testDebugUnitTest','assembleDebug')
-    } else {throw 'Gradle 8.9 not found. Place ezTube beside ezTIK or install Gradle 8.9.'}
+    } else {throw 'No ezTIK Gradle wrapper or Gradle 8.9 installed'}
     $Apk=Join-Path $Root 'app\build\outputs\apk\debug\app-debug.apk'
     if(-not (Test-Path $Apk)){throw 'ezTIK debug APK missing'}
     if(-not $LabDir){

@@ -28,7 +28,7 @@ There is **no guarantee of an ad-free feed**, personalized For You, ongoing API 
 4. Run `powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\run-eztik-local-lab.ps1`.
 5. Keep PowerShell open during video playback; pressing Enter ends backend/reverse.
 
-A Gradle 8.9 binary is required. The local QA script uses the existing `..\ezTube\gradlew.bat` distribution **as a build tool only**, or system Gradle if present. The Android app source and Git repository are independent of ezTube; no source files are loaded from the ezTube checkout at runtime. CI installs Gradle 8.9 separately.
+The repository includes its **own Gradle 8.9 wrapper** (`gradlew.bat`, `gradlew`, `gradle/wrapper/`). The Android app and its build are independent of the ezTube checkout. The only reuse in the local debug lab is the existing *cached* pinned TikTok guest-feed backend, which is not included in the APK. CI uses the same pinned Gradle version.
 
 ## HTTPS option (future; not active)
 

@@ -34,4 +34,4 @@ jobs:
         with:
           gradle-version: '8.9'
       - name: Android unit tests and debug APK
-        run: gradle --no-daemon testDebugUnitTest assembleDebug
+        run: bash ./gradlew --no-daemon testDebugUnitTest assembleDebug
