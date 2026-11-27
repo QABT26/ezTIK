@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ezTIK</string>
+    <string name="tiktok_feed_title">TikTok feed</string>
+    <string name="tiktok_feed_loading">Loading TikTok videos...</string>
+    <string name="tiktok_feed_unavailable">Playable feed is not available.</string>
+    <string name="tiktok_feed_retry">Retry</string>
+    <string name="tiktok_feed_note">Public guest feed experiment. No TikTok sign-in or guaranteed ad filtering.</string>
+    <string name="tiktok_feed_paused">Paused</string>
+    <string name="tiktok_feed_refresh">Refresh feed</string>
+</resources>

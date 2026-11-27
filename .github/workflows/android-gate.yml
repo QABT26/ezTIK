@@ -1,0 +1,30 @@
+name: ezTIK Android gate
+
+on:
+  push:
+    branches: [main, feat/eztik-android-foundation-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Node guest gateway tests
+        run: node --test backend/tiktok/feed-gateway.test.js
+      - name: Android unit tests and debug APK
+        run: gradle --no-daemon testDebugUnitTest assembleDebug

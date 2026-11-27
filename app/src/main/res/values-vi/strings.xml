@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ezTIK</string>
+    <string name="tiktok_feed_title">Bảng tin TikTok</string>
+    <string name="tiktok_feed_loading">Đang tải video TikTok...</string>
+    <string name="tiktok_feed_unavailable">Chưa lấy được bảng tin có thể phát.</string>
+    <string name="tiktok_feed_retry">Thử lại</string>
+    <string name="tiktok_feed_note">Thử nghiệm bảng tin công khai. Chưa đăng nhập TikTok hoặc bảo đảm lọc quảng cáo.</string>
+    <string name="tiktok_feed_paused">Đã tạm dừng</string>
+    <string name="tiktok_feed_refresh">Làm mới bảng tin</string>
+</resources>
