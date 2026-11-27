@@ -1,4 +1,4 @@
-# ezTIK extraction and QA gates
+# ezTIK separation finalized — Android v0.1
 
 ## Source provenance
 
@@ -15,7 +15,7 @@ Only TikTok-specific pieces are migrated. All old TikTok WebView feed-signing/ob
 
 ## Constraints
 
-- No unconditional merge into ezTube/main or ezTIK/main until Samsung tests pass.
+- ezTIK v0.1 was merged into ezTIK/main only after CI tests and Samsung local-feed Media3 QA. **No TikTok changes were merged into ezTube/main.**
 - No automatic run on QBT/QTAT production VPS.
 - Android release: HTTPS only, no localhost fallback.
 - TikTok URL validation: secure origin and approved TikTok CDN suffixes; no arbitrary media proxy.
@@ -31,3 +31,12 @@ Only TikTok-specific pieces are migrated. All old TikTok WebView feed-signing/ob
 5. Later: a *real* independent HTTPS service must work with mobile data and no ADB reverse before calling ezTIK standalone operational.
 
 If any gate fails, stop and diagnose from output rather than blindly patching TikTok signatures.
+
+## Cutover record (2026-11-27)
+
+- ezTIK PR #1 merged (squash) into `ezTIK/main` at `352ddb7e598438794b9d5b9b536159c5a163ecee`.
+- ezTube `main` verified at `643d5598cc6c3f6d762ceb002035b3352a130076`: no TikTok source paths, navigation tab, gateway or runtime dependency.
+- ezTube TikTok PRs #22, #23, #24, #25 **closed without merge**. Their research histories remain inspectable, but future TikTok work belongs exclusively to ezTIK.
+- Standalone ezTIK debug lab passed on Samsung: 16 initial guest-feed items, player READY, preload and transitions from page 0 through 4. No playback error shown. Audio, refresh and screen-timeout not independently confirmed by those logs.
+- An independent HTTPS guest-feed source **has not been deployed**. Local lab's Windows upstream and ADB reverse are still needed. Application separation is complete; feed-operation independence is not.
+- Remote legacy Git branches in ezTube are research archives pending explicit cleanup; closing PRs does not delete their refs. Local user working trees are not modified by GitHub merges.
